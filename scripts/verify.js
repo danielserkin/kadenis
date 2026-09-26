@@ -73,7 +73,7 @@ const mobileImg = path.join(assetsDir, 'screenshot-mobile.png');
 
 try {
   const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
-  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --user-data-dir=${tmpUserData} --screenshot="${desktopImg}" --window-size=1440,900 "${indexPath}"`, { stdio: 'pipe' });
+  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --hide-scrollbars --force-device-scale-factor=1 --user-data-dir=${tmpUserData} --screenshot="${desktopImg}" --window-size=1440,900 "${indexPath}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Escritorio guardada: ${desktopImg}`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Escritorio:', e.message);
@@ -81,7 +81,7 @@ try {
 
 try {
   const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
-  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --user-data-dir=${tmpUserData} --screenshot="${mobileImg}" --window-size=375,812 "${indexPath}"`, { stdio: 'pipe' });
+  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --hide-scrollbars --force-device-scale-factor=1 --user-data-dir=${tmpUserData} --screenshot="${mobileImg}" --window-size=375,812 "${indexPath}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Móvil guardada: ${mobileImg}`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Móvil:', e.message);
@@ -97,7 +97,7 @@ const mobileOpenImg = path.join(assetsDir, 'screenshot-mobile-open.png');
 
 try {
   const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
-  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --user-data-dir=${tmpUserData} --screenshot="${mobileOpenImg}" --window-size=375,812 "file://${openMenuHtml}"`, { stdio: 'pipe' });
+  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --hide-scrollbars --force-device-scale-factor=1 --user-data-dir=${tmpUserData} --screenshot="${mobileOpenImg}" --window-size=375,812 "file://${openMenuHtml}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Móvil con Menú Abierto guardada: ${mobileOpenImg}\n`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Móvil menú abierto:', e.message);

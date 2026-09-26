@@ -1,6 +1,6 @@
 .form-notice a,
 .footer-email {
-  color: var(--blue-glow) !important;
+  color: var(--yellow-bright) !important;
   font-weight: 700;
 }
 
@@ -46,8 +46,7 @@
     overflow-wrap: break-word;
     word-break: normal;
   }
-}/* Base eyebrow spacing adjustment */
+}
 .eyebrow {
   margin: 0 0 1rem;
 }
-
