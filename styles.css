@@ -78,6 +78,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .hero-note span { color: var(--yellow); font-size: 1rem; }
 
 /* Sections */
+.section, .hero { scroll-margin-top: 80px; }
 .section { padding: clamp(4.6rem, 9vw, 9.5rem) clamp(1.25rem, 8.5vw, 9rem); }
 .intro { border-bottom: 1px solid var(--line); }
 .intro-grid, .section-heading { display: grid; grid-template-columns: 1.15fr .85fr; gap: 3rem; align-items: end; }

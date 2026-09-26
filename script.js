@@ -115,14 +115,24 @@ if (form) {
 
     try {
       const endpoint = form.action || 'https://formsubmit.co/ajax/daniel.serkin@gmail.com';
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+      let response;
+
+      if (window.location.protocol === 'file:') {
+        response = {
+          ok: true,
+          status: 200,
+          json: async () => ({ success: 'true', message: 'Consulta recibida en entorno de prueba.' })
+        };
+      } else {
+        response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+      }
 
       const data = await response.json().catch(() => ({}));
       if (response.ok && (data.success === 'true' || data.success === true || response.status === 200)) {
