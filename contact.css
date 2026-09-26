@@ -1,0 +1,131 @@
+.form-notice a,
+.footer-email {
+  color: var(--yellow) !important;
+  font-weight: 700;
+}
+
+.form-notice a:hover,
+.form-notice a:focus-visible,
+.footer-email:hover,
+.footer-email:focus-visible {
+  color: #fff !important;
+  text-decoration-thickness: 2px;
+}
+
+.contact-form .button:disabled {
+  cursor: wait;
+  opacity: .72;
+}
+
+@media (max-width: 760px) {
+  .footer-email {
+    font-size: .84rem;
+  }
+
+  .hero-copy,
+  .intro-grid,
+  .section-heading,
+  .approach,
+  .contact {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.1rem, 8.5vw, 3rem);
+    line-height: 1.06;
+  }
+
+  .intro h2,
+  .section-heading h2,
+  .approach h2,
+  .contact h2 {
+    font-size: clamp(1.55rem, 6vw, 2.15rem);
+    line-height: 1.12;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+}
+
+/* Corrects the base spacing even in browsers that discard its malformed shorthand. */
+.eyebrow {
+  margin: 0 0 1rem;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.menu-toggle:focus-visible {
+  outline: 3px solid var(--yellow-deep);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    position: relative;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: 700 .78rem/1 var(--sans);
+    cursor: pointer;
+  }
+
+  .menu-toggle-icon,
+  .menu-toggle-icon::before,
+  .menu-toggle-icon::after {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    content: "";
+  }
+
+  .menu-toggle-icon {
+    position: relative;
+  }
+
+  .menu-toggle-icon::before,
+  .menu-toggle-icon::after {
+    position: absolute;
+    left: 0;
+  }
+
+  .menu-toggle-icon::before { top: -6px; }
+  .menu-toggle-icon::after { top: 6px; }
+
+  .site-header nav {
+    position: absolute;
+    z-index: 5;
+    top: 68px;
+    right: 1.25rem;
+    left: 1.25rem;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 15px 30px rgba(6, 21, 42, .14);
+  }
+
+  .site-header nav.is-open {
+    display: flex;
+  }
+
+  .site-header nav a {
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header nav a:last-child {
+    border-bottom: 0;
+  }
+}

@@ -1,0 +1,8 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Kadenis</title>
+  <rect width="48" height="48" rx="14" fill="#06152A"/>
+  <path d="M15 12V36M17 24L31 12M19 25L32 36" stroke="#F4C542" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M31.5 29.5C35.09 29.5 38 32.19 38 35.5C38 37.25 37.18 38.88 35.78 40" stroke="#F4C542" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="31" cy="35" r="1.25" fill="#F4C542"/>
+  <circle cx="35" cy="35" r="1.25" fill="#F4C542"/>
+</svg>
