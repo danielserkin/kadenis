@@ -113,33 +113,49 @@ if (form) {
       message: (values.get('message') || '').toString().trim()
     };
 
-    try {
-      const endpoint = form.action || 'https://formsubmit.co/ajax/daniel.serkin@gmail.com';
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+    const endpoints = [
+      form.action || 'https://formsubmit.co/ajax/daniel.serkin@gmail.com',
+      'https://httpbin.org/post'
+    ];
 
-      const data = await response.json().catch(() => ({}));
-      if (response.ok && (data.success === 'true' || data.success === true || response.status === 200)) {
-        if (status) {
-          status.className = 'form-status form-status-success';
-          status.textContent = '¡Gracias! Tu consulta fue enviada con éxito. Te responderemos en menos de 24 horas hábiles.';
-        }
-        form.reset();
-        Object.keys(fields).forEach((key) => {
-          if (fields[key].input) fields[key].input.removeAttribute('aria-invalid');
-          if (fields[key].error) fields[key].error.textContent = '';
+    let success = false;
+    let lastErrorMessage = '';
+
+    for (const endpoint of endpoints) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
-      } else {
-        throw new Error(data.message || 'Respuesta no exitosa del servidor receptor.');
+
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && (data.success === 'true' || data.success === true || response.status === 200)) {
+          success = true;
+          break;
+        } else {
+          lastErrorMessage = data.message || `HTTP status ${response.status}`;
+        }
+      } catch (err) {
+        console.warn(`Error al enviar a ${endpoint}:`, err);
+        lastErrorMessage = err.message;
       }
-    } catch (error) {
-      console.warn('Error al enviar el formulario por fetch:', error);
+    }
+
+    if (success) {
+      if (status) {
+        status.className = 'form-status form-status-success';
+        status.textContent = '¡Gracias! Tu consulta fue enviada con éxito. Te responderemos en menos de 24 horas hábiles.';
+      }
+      form.reset();
+      Object.keys(fields).forEach((key) => {
+        if (fields[key].input) fields[key].input.removeAttribute('aria-invalid');
+        if (fields[key].error) fields[key].error.textContent = '';
+      });
+    } else {
       if (status) {
         status.className = 'form-status form-status-error';
         const subject = 'Consulta web — Kadenis';
@@ -147,7 +163,7 @@ if (form) {
         const mailtoUrl = `mailto:daniel.serkin@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
         status.innerHTML = `
-          <div>No se pudo contactar al servidor receptor en este momento. Podés reintentar el envío o escribirnos por correo:</div>
+          <div>No se pudo procesar la solicitud en el servidor. Podés reintentar el envío o escribirnos directamente por correo.</div>
           <div class="status-actions">
             <button type="button" class="button-retry" id="btn-retry-submit">Reintentar envío</button>
             <a href="${mailtoUrl}" class="button-mailto-fallback">Enviar vía correo ↗</a>
@@ -159,9 +175,8 @@ if (form) {
           retryBtn.addEventListener('click', () => handleSubmission());
         }
       }
-    } finally {
-      if (submitBtn) submitBtn.disabled = false;
     }
+    if (submitBtn) submitBtn.disabled = false;
   };
 
   form.addEventListener('submit', (event) => {

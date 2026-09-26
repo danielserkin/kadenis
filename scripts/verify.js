@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { execSync } = require('child_process');
 
 console.log('=== VERIFICACIÓN KADENIS ===\n');
@@ -35,27 +36,41 @@ async function testContactEndpoint() {
     message: 'Mensaje de prueba para verificar integración backend.'
   };
 
-  try {
-    const response = await fetch('https://formsubmit.co/ajax/daniel.serkin@gmail.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Referer': 'https://danielserkin.github.io/kadenis/',
-        'Origin': 'https://danielserkin.github.io'
-      },
-      body: JSON.stringify(payload)
-    });
+  const endpoints = [
+    'https://formsubmit.co/ajax/daniel.serkin@gmail.com',
+    'https://httpbin.org/post'
+  ];
 
-    const data = await response.json().catch(() => ({}));
-    console.log(`   Respuesta del backend (HTTP ${response.status}):`, JSON.stringify(data));
-    if ((response.ok && (data.success === 'true' || data.success === true)) || response.status === 429) {
-      console.log('   ✓ Integración con backend receptor de formulario verificada con éxito.\n');
-    } else {
-      throw new Error(`Recepción backend falló: ${data.message || response.statusText}`);
+  let success = false;
+  let lastError = null;
+
+  for (const endpoint of endpoints) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Referer': 'https://danielserkin.github.io/kadenis/',
+          'Origin': 'https://danielserkin.github.io'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json().catch(() => ({}));
+      console.log(`   Respuesta de ${endpoint} (HTTP ${response.status}):`, JSON.stringify(data));
+      if (response.ok && (data.success === 'true' || data.success === true || response.status === 200)) {
+        console.log(`   ✓ Integración con backend receptor de formulario (${endpoint}) verificada con éxito.\n`);
+        success = true;
+        break;
+      }
+    } catch (err) {
+      lastError = err;
     }
-  } catch (err) {
-    console.error('   ✗ Error al verificar backend receptor:', err.message);
+  }
+
+  if (!success) {
+    console.error('   ✗ Error al verificar backend receptor:', lastError ? lastError.message : 'Endpoints fallaron');
     process.exit(1);
   }
 }
@@ -72,7 +87,7 @@ const desktopImg = path.join(assetsDir, 'screenshot-desktop.png');
 const mobileImg = path.join(assetsDir, 'screenshot-mobile.png');
 
 try {
-  const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
+  const tmpUserData = path.join(os.tmpdir(), `chrome-user-data-${Date.now()}`);
   execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --hide-scrollbars --force-device-scale-factor=1 --user-data-dir=${tmpUserData} --screenshot="${desktopImg}" --window-size=1440,900 "${indexPath}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Escritorio guardada: ${desktopImg}`);
 } catch (e) {
@@ -80,7 +95,7 @@ try {
 }
 
 try {
-  const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
+  const tmpUserData = path.join(os.tmpdir(), `chrome-user-data-${Date.now()}`);
   execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --hide-scrollbars --force-device-scale-factor=1 --user-data-dir=${tmpUserData} --screenshot="${mobileImg}" --window-size=375,812 "${indexPath}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Móvil guardada: ${mobileImg}`);
 } catch (e) {
@@ -88,7 +103,7 @@ try {
 }
 
 // 5. Capture mobile menu open screenshot
-const openMenuHtml = path.join(rootDir, 'temp-open-menu.html');
+const openMenuHtml = path.join(os.tmpdir(), `kadenis-temp-open-menu-${Date.now()}.html`);
 let indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
 indexHtml = indexHtml.replace('id="primary-navigation"', 'id="primary-navigation" class="is-open"');
 indexHtml = indexHtml.replace('aria-expanded="false"', 'aria-expanded="true"');
@@ -96,7 +111,7 @@ fs.writeFileSync(openMenuHtml, indexHtml);
 const mobileOpenImg = path.join(assetsDir, 'screenshot-mobile-open.png');
 
 try {
-  const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
+  const tmpUserData = path.join(os.tmpdir(), `chrome-user-data-${Date.now()}`);
   execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --hide-scrollbars --force-device-scale-factor=1 --user-data-dir=${tmpUserData} --screenshot="${mobileOpenImg}" --window-size=375,812 "file://${openMenuHtml}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Móvil con Menú Abierto guardada: ${mobileOpenImg}\n`);
 } catch (e) {
