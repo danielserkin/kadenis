@@ -21,7 +21,7 @@ if (menuToggle && navigation) {
   });
 }
 
-form?.addEventListener('submit', (event) => {
+form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!form.checkValidity()) {
     form.reportValidity();
@@ -29,23 +29,44 @@ form?.addEventListener('submit', (event) => {
     return;
   }
 
+  const submitBtn = form.querySelector('button[type="submit"]');
+  if (submitBtn) submitBtn.disabled = true;
+  status.textContent = 'Enviando consulta…';
+
   const values = new FormData(form);
-  const name = values.get('name') || '';
-  const email = values.get('email') || '';
-  const company = values.get('company') || 'No indicada';
-  const phone = values.get('phone') || 'No indicado';
-  const message = values.get('message') || '';
+  const payload = {
+    name: values.get('name') || '',
+    email: values.get('email') || '',
+    company: values.get('company') || 'No indicada',
+    phone: values.get('phone') || 'No indicado',
+    message: values.get('message') || ''
+  };
 
-  const subject = 'Consulta web — Kadenis';
-  const body = `Nombre: ${name}\nEmail: ${email}\nEmpresa: ${company}\nTeléfono: ${phone}\n\nConsulta:\n${message}`;
+  try {
+    const endpoint = form.action || 'https://formsubmit.co/ajax/daniel.serkin@gmail.com';
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-  const mailtoUrl = `mailto:daniel.serkin@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-  status.textContent = 'Abriendo tu cliente de correo…';
-  window.location.href = mailtoUrl;
-
-  setTimeout(() => {
-    status.textContent = '¡Gracias! Se preparó el correo en tu aplicación predeterminada para el envío.';
-    form.reset();
-  }, 1000);
+    const data = await response.json().catch(() => ({}));
+    if (response.ok && (data.success === 'true' || data.success === true || response.status === 200)) {
+      status.textContent = '¡Gracias! Tu consulta fue enviada con éxito a nuestro backend receptor. Te responderemos a la brevedad.';
+      form.reset();
+    } else {
+      throw new Error(data.message || 'Respuesta no exitosa del backend.');
+    }
+  } catch (error) {
+    console.warn('Backend indisponible o error de red, usando fallback mailto:', error);
+    status.textContent = 'No se pudo contactar al servidor receptor. Abriendo tu cliente de correo…';
+    const subject = 'Consulta web — Kadenis';
+    const body = `Nombre: ${payload.name}\nEmail: ${payload.email}\nEmpresa: ${payload.company}\nTeléfono: ${payload.phone}\n\nConsulta:\n${payload.message}`;
+    window.location.href = `mailto:daniel.serkin@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
+  }
 });

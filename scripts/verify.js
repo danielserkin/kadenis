@@ -24,26 +24,39 @@ try {
   process.exit(1);
 }
 
-// 3. Test contact form mailto flow
-console.log('3. Verificando flujo de contacto mailto sin servicio externo...');
+// 3. Test contact form backend receiver HTTP endpoint
+console.log('3. Verificando envío real de formulario al backend receptor HTTP...');
 async function testContactEndpoint() {
   const payload = {
-    nombre: 'QA Verifier',
+    name: 'QA Verifier',
     email: 'qa.test@kadenis.dev',
-    empresa: 'Kadenis QA',
-    telefono: '+5491100000000',
-    consulta: 'Mensaje de prueba para verificar integración mailto.'
+    company: 'Kadenis QA',
+    phone: '+5491100000000',
+    message: 'Mensaje de prueba para verificar integración backend.'
   };
 
-  const subject = 'Consulta web — Kadenis';
-  const body = `Nombre: ${payload.nombre}\nEmail: ${payload.email}\nEmpresa: ${payload.empresa}\nTeléfono: ${payload.telefono}\n\nConsulta:\n${payload.consulta}`;
-  const mailtoUrl = `mailto:daniel.serkin@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  try {
+    const response = await fetch('https://formsubmit.co/ajax/daniel.serkin@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Referer': 'https://danielserkin.github.io/kadenis/',
+        'Origin': 'https://danielserkin.github.io'
+      },
+      body: JSON.stringify(payload)
+    });
 
-  console.log(`   Construcción de URI Mailto: ${mailtoUrl.substring(0, 60)}...`);
-  if (mailtoUrl.includes('daniel.serkin@gmail.com') && mailtoUrl.includes(encodeURIComponent(subject))) {
-    console.log('   ✓ Flujo de formulario mailto verificado sin dependencias externas de clave de producto.\n');
-  } else {
-    throw new Error('Falló la generación del enlace mailto.');
+    const data = await response.json();
+    console.log(`   Respuesta del backend (HTTP ${response.status}):`, JSON.stringify(data));
+    if (response.ok && (data.success === 'true' || data.success === true)) {
+      console.log('   ✓ Integración con backend receptor de formulario verificada con éxito.\n');
+    } else {
+      throw new Error(`Recepción backend falló: ${data.message || response.statusText}`);
+    }
+  } catch (err) {
+    console.error('   ✗ Error al verificar backend receptor:', err.message);
+    process.exit(1);
   }
 }
 
