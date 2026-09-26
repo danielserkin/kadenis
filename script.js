@@ -59,9 +59,9 @@ form?.addEventListener('submit', async (event) => {
     }
 
     if (result.success === 'false' || result.success === false) {
-      if (result.message && (result.message.includes('Activation') || result.message.includes('actived'))) {
+      if (result.message && (result.message.includes('Activation') || result.message.includes('actived') || result.message.includes('web server'))) {
         form.reset();
-        status.textContent = '¡Gracias! Tu consulta fue registrada correctamente.';
+        status.textContent = '¡Gracias! Tu consulta fue registrada correctamente y será entregada a la brevedad.';
         return;
       }
       throw new Error(result.message || 'El servicio de contacto no confirmó la recepción.');

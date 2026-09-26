@@ -76,14 +76,16 @@ const desktopImg = path.join(assetsDir, 'screenshot-desktop.png');
 const mobileImg = path.join(assetsDir, 'screenshot-mobile.png');
 
 try {
-  execSync(`google-chrome --headless=new --disable-gpu --screenshot="${desktopImg}" --window-size=1440,900 "${indexPath}"`, { stdio: 'pipe' });
+  const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
+  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --user-data-dir=${tmpUserData} --screenshot="${desktopImg}" --window-size=1440,900 "${indexPath}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Escritorio guardada: ${desktopImg}`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Escritorio:', e.message);
 }
 
 try {
-  execSync(`google-chrome --headless=new --disable-gpu --screenshot="${mobileImg}" --window-size=375,812 "${indexPath}"`, { stdio: 'pipe' });
+  const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
+  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --user-data-dir=${tmpUserData} --screenshot="${mobileImg}" --window-size=375,812 "${indexPath}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Móvil guardada: ${mobileImg}`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Móvil:', e.message);
@@ -98,7 +100,8 @@ fs.writeFileSync(openMenuHtml, indexHtml);
 const mobileOpenImg = path.join(assetsDir, 'screenshot-mobile-open.png');
 
 try {
-  execSync(`google-chrome --headless=new --disable-gpu --screenshot="${mobileOpenImg}" --window-size=375,812 "file://${openMenuHtml}"`, { stdio: 'pipe' });
+  const tmpUserData = `/tmp/chrome-user-data-${Date.now()}`;
+  execSync(`google-chrome --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --user-data-dir=${tmpUserData} --screenshot="${mobileOpenImg}" --window-size=375,812 "file://${openMenuHtml}"`, { stdio: 'pipe' });
   console.log(`   ✓ Captura de pantalla Móvil con Menú Abierto guardada: ${mobileOpenImg}\n`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Móvil menú abierto:', e.message);

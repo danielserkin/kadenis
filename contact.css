@@ -1,6 +1,6 @@
 .form-notice a,
 .footer-email {
-  color: var(--yellow) !important;
+  color: var(--blue-glow) !important;
   font-weight: 700;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .menu-toggle:focus-visible {
-  outline: 3px solid var(--yellow-deep);
+  outline: 3px solid var(--blue-deep);
   outline-offset: 4px;
   border-radius: 2px;
 }
