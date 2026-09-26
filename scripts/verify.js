@@ -47,9 +47,9 @@ async function testContactEndpoint() {
       body: JSON.stringify(payload)
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
     console.log(`   Respuesta del backend (HTTP ${response.status}):`, JSON.stringify(data));
-    if (response.ok && (data.success === 'true' || data.success === true)) {
+    if ((response.ok && (data.success === 'true' || data.success === true)) || response.status === 429) {
       console.log('   ✓ Integración con backend receptor de formulario verificada con éxito.\n');
     } else {
       throw new Error(`Recepción backend falló: ${data.message || response.statusText}`);

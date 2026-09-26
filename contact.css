@@ -1,4 +1,5 @@
 .form-notice a,
+.privacy-notice a,
 .footer-email {
   color: var(--yellow-bright) !important;
   font-weight: 700;
@@ -6,10 +7,32 @@
 
 .form-notice a:hover,
 .form-notice a:focus-visible,
+.privacy-notice a:hover,
+.privacy-notice a:focus-visible,
 .footer-email:hover,
 .footer-email:focus-visible {
   color: #fff !important;
   text-decoration-thickness: 2px;
+}
+
+.privacy-notice {
+  margin: 1.1rem 0 1.25rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left: 3px solid var(--yellow);
+  border-radius: 4px;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: #c9d1db;
+}
+
+.privacy-notice p {
+  margin: 0;
+}
+
+.privacy-notice strong {
+  color: #ffffff;
 }
 
 .contact-form .button:disabled {
