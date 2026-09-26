@@ -53,6 +53,10 @@
   margin: 0 0 1rem;
 }
 
+.mobile-nav-cta {
+  display: none;
+}
+
 .menu-toggle {
   display: none;
 }
@@ -123,6 +127,18 @@
   .site-header nav a {
     padding: 1rem 1.1rem;
     border-bottom: 1px solid var(--line);
+  }
+
+  .site-header nav .mobile-nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.75rem 1.1rem 1.1rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--ink);
+    border-radius: 99px;
+    font-size: .85rem;
+    font-weight: 700;
   }
 
   .site-header nav a:last-child {

@@ -84,9 +84,26 @@ try {
 
 try {
   execSync(`google-chrome --headless=new --disable-gpu --screenshot="${mobileImg}" --window-size=375,812 "${indexPath}"`, { stdio: 'pipe' });
-  console.log(`   ✓ Captura de pantalla Móvil guardada: ${mobileImg}\n`);
+  console.log(`   ✓ Captura de pantalla Móvil guardada: ${mobileImg}`);
 } catch (e) {
   console.error('   ⚠ No se pudo capturar pantalla Móvil:', e.message);
+}
+
+// 5. Capture mobile menu open screenshot
+const openMenuHtml = path.join(rootDir, 'temp-open-menu.html');
+let indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
+indexHtml = indexHtml.replace('id="primary-navigation"', 'id="primary-navigation" class="is-open"');
+indexHtml = indexHtml.replace('aria-expanded="false"', 'aria-expanded="true"');
+fs.writeFileSync(openMenuHtml, indexHtml);
+const mobileOpenImg = path.join(assetsDir, 'screenshot-mobile-open.png');
+
+try {
+  execSync(`google-chrome --headless=new --disable-gpu --screenshot="${mobileOpenImg}" --window-size=375,812 "file://${openMenuHtml}"`, { stdio: 'pipe' });
+  console.log(`   ✓ Captura de pantalla Móvil con Menú Abierto guardada: ${mobileOpenImg}\n`);
+} catch (e) {
+  console.error('   ⚠ No se pudo capturar pantalla Móvil menú abierto:', e.message);
+} finally {
+  if (fs.existsSync(openMenuHtml)) fs.unlinkSync(openMenuHtml);
 }
 
 testContactEndpoint().then(() => {
