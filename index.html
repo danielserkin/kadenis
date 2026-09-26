@@ -59,13 +59,13 @@
 
       <section class="contact" id="contacto" aria-labelledby="contact-title">
         <div class="contact-copy"><p class="eyebrow"><span></span>Contacto</p><h2 id="contact-title">Una buena solución empieza con una conversación.</h2><p>Contanos qué querés conectar, ordenar o resolver. Te ayudamos a dar el próximo paso.</p></div>
-        <form class="contact-form" id="contact-form" action="https://formsubmit.co/ajax/daniel.serkin@gmail.com" method="post" novalidate aria-describedby="form-notice" data-contact-endpoint="https://formsubmit.co/ajax/daniel.serkin@gmail.com">
+        <form class="contact-form" id="contact-form" action="mailto:daniel.serkin@gmail.com" method="post" enctype="text/plain" novalidate aria-describedby="form-notice">
           <div class="form-row"><label for="name">Nombre <span aria-hidden="true">*</span></label><input id="name" name="name" autocomplete="name" required /></div>
           <div class="form-row"><label for="email">Email <span aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" required /></div>
           <div class="form-row"><label for="company">Empresa <span class="optional">Opcional</span></label><input id="company" name="company" autocomplete="organization" /></div>
           <div class="form-row"><label for="phone">Teléfono <span class="optional">Opcional</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" /></div>
           <div class="form-row"><label for="message">¿En qué podemos ayudarte? <span aria-hidden="true">*</span></label><textarea id="message" name="message" rows="4" required></textarea></div>
-          <p class="form-notice" id="form-notice">Tus datos se envían de forma segura al canal comercial de Kadenis. También podés escribirnos a <a href="mailto:daniel.serkin@gmail.com?subject=Consulta%20web%20%E2%80%94%20Kadenis">daniel.serkin@gmail.com</a>.</p>
+          <p class="form-notice" id="form-notice">El formulario abre tu cliente de correo predeterminado para enviar la consulta (requiere tener una aplicación o cuenta de correo configurada en tu dispositivo). También podés escribirnos directamente a <a href="mailto:daniel.serkin@gmail.com?subject=Consulta%20web%20%E2%80%94%20Kadenis">daniel.serkin@gmail.com</a>.</p>
           <button class="button button-primary" type="submit">Enviar consulta <span aria-hidden="true">→</span></button>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>

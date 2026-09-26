@@ -21,7 +21,7 @@ if (menuToggle && navigation) {
   });
 }
 
-form?.addEventListener('submit', async (event) => {
+form?.addEventListener('submit', (event) => {
   event.preventDefault();
   if (!form.checkValidity()) {
     form.reportValidity();
@@ -29,51 +29,23 @@ form?.addEventListener('submit', async (event) => {
     return;
   }
 
-  const submitButton = form.querySelector('button[type="submit"]');
   const values = new FormData(form);
-  const payload = {
-    _subject: 'Consulta web — Kadenis',
-    _template: 'table',
-    origen: window.location.href,
-    nombre: values.get('name'),
-    email: values.get('email'),
-    empresa: values.get('company') || 'No indicada',
-    telefono: values.get('phone') || 'No indicado',
-    consulta: values.get('message'),
-  };
+  const name = values.get('name') || '';
+  const email = values.get('email') || '';
+  const company = values.get('company') || 'No indicada';
+  const phone = values.get('phone') || 'No indicado';
+  const message = values.get('message') || '';
 
-  submitButton.disabled = true;
-  submitButton.setAttribute('aria-busy', 'true');
-  status.textContent = 'Enviando tu consulta…';
+  const subject = 'Consulta web — Kadenis';
+  const body = `Nombre: ${name}\nEmail: ${email}\nEmpresa: ${company}\nTeléfono: ${phone}\n\nConsulta:\n${message}`;
 
-  try {
-    const response = await fetch(form.dataset.contactEndpoint, {
-      method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const result = await response.json().catch(() => ({}));
+  const mailtoUrl = `mailto:daniel.serkin@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    if (!response.ok) {
-      throw new Error(result.message || 'El servicio no confirmó el envío.');
-    }
+  status.textContent = 'Abriendo tu cliente de correo…';
+  window.location.href = mailtoUrl;
 
-    if (result.success === 'false' || result.success === false) {
-      if (result.message && (result.message.includes('Activation') || result.message.includes('actived') || result.message.includes('web server'))) {
-        form.reset();
-        status.textContent = '¡Gracias! Tu consulta fue registrada correctamente y será entregada a la brevedad.';
-        return;
-      }
-      throw new Error(result.message || 'El servicio de contacto no confirmó la recepción.');
-    }
-
+  setTimeout(() => {
+    status.textContent = '¡Gracias! Se preparó el correo en tu aplicación predeterminada para el envío.';
     form.reset();
-    status.textContent = '¡Gracias! Recibimos tu consulta y te responderemos pronto.';
-  } catch (error) {
-    status.textContent = 'No pudimos enviar la consulta. Probá nuevamente o escribinos al correo indicado arriba.';
-    console.error('Contact form submission failed:', error);
-  } finally {
-    submitButton.disabled = false;
-    submitButton.removeAttribute('aria-busy');
-  }
+  }, 1000);
 });

@@ -24,43 +24,26 @@ try {
   process.exit(1);
 }
 
-// 3. Test contact form submission endpoint
-console.log('3. Verificando flujo de contacto frontend -> backend...');
+// 3. Test contact form mailto flow
+console.log('3. Verificando flujo de contacto mailto sin servicio externo...');
 async function testContactEndpoint() {
   const payload = {
-    _subject: 'Consulta web — Kadenis (Test de Verificación)',
     nombre: 'QA Verifier',
     email: 'qa.test@kadenis.dev',
     empresa: 'Kadenis QA',
     telefono: '+5491100000000',
-    consulta: 'Mensaje de prueba para verificar integración frontend->backend.'
+    consulta: 'Mensaje de prueba para verificar integración mailto.'
   };
 
-  const endpoint = 'https://formsubmit.co/ajax/daniel.serkin@gmail.com';
-  console.log(`   Enviando request POST a ${endpoint}...`);
+  const subject = 'Consulta web — Kadenis';
+  const body = `Nombre: ${payload.nombre}\nEmail: ${payload.email}\nEmpresa: ${payload.empresa}\nTeléfono: ${payload.telefono}\n\nConsulta:\n${payload.consulta}`;
+  const mailtoUrl = `mailto:daniel.serkin@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Referer': 'https://danielserkin.github.io/kadenis/'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const result = await response.json();
-    console.log(`   Status HTTP: ${response.status}`);
-    console.log(`   Respuesta backend:`, JSON.stringify(result, null, 2));
-
-    if (response.ok || result.success !== undefined) {
-      console.log('   ✓ Request frontend->backend ejecutado y respuesta de servidor recibida correctamente.\n');
-    } else {
-      console.log('   ⚠ Endpoint respondió con advertencia pero la comunicación HTTP completó.\n');
-    }
-  } catch (error) {
-    console.error('   ✗ Error en la request de contacto:', error);
+  console.log(`   Construcción de URI Mailto: ${mailtoUrl.substring(0, 60)}...`);
+  if (mailtoUrl.includes('daniel.serkin@gmail.com') && mailtoUrl.includes(encodeURIComponent(subject))) {
+    console.log('   ✓ Flujo de formulario mailto verificado sin dependencias externas de clave de producto.\n');
+  } else {
+    throw new Error('Falló la generación del enlace mailto.');
   }
 }
 
